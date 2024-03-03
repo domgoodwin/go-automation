@@ -39,6 +39,7 @@ func (c *Client) sendMessage(msg string) error {
 	if err != nil {
 		panic(err)
 	}
+	c.counter++
 	return err
 }
 
@@ -46,8 +47,8 @@ func (c *Client) GetDailyData(day time.Time) *RecorderDailyData {
 	start := day.Truncate(time.Hour * 24)
 	end := start.Add(24 * time.Hour).Add(-1 * time.Second)
 
-	fmt.Println("get daily data")
-	msg := fmt.Sprintf(`{"type":"recorder/statistics_during_period","start_time":"%s","end_time":"%s","statistic_ids":["sensor.pv_energy"],"period":"hour","units":{"energy":"kWh"},"types":["change"],"id":1}`, start.Format(time.RFC3339), end.Format(time.RFC3339))
+	fmt.Printf("get daily data: %d %v %v\n", c.counter, start, end)
+	msg := fmt.Sprintf(`{"type":"recorder/statistics_during_period","start_time":"%s","end_time":"%s","statistic_ids":["sensor.pv_energy"],"period":"hour","units":{"energy":"kWh"},"types":["change"],"id":%d}`, start.Format(time.RFC3339), end.Format(time.RFC3339), c.counter)
 	_ = c.sendMessage(msg)
 	_, rsp, _ := c.readMessage()
 
@@ -93,6 +94,7 @@ func (d *RecorderDailyData) GetHourlyData() ([]time.Time, []float64) {
 			lastNonZeroIndex = i
 		}
 	}
+
 	return timeValues[firstNonZeroIndex-1 : lastNonZeroIndex+2], sensorValues[firstNonZeroIndex-1 : lastNonZeroIndex+2]
 }
 
@@ -109,6 +111,12 @@ func (d *RecorderDailyData) ToFig() *grob.Fig {
 	timeValues, sensorValues := d.GetHourlyData()
 	fmt.Println(timeValues)
 	fmt.Println(sensorValues)
+
+	for i, timeVal := range timeValues {
+		if timeVal.IsZero() && i != 0 {
+			timeValues[i] = timeValues[i-1].Add(time.Hour)
+		}
+	}
 
 	fig := &grob.Fig{
 		Data: grob.Traces{
@@ -144,4 +152,12 @@ func (d *RecorderDailyData) Status() string {
 
 func (d *RecorderDailyData) IsEmpty() bool {
 	return len(d.Result.SensorPvEnergy) == 0
+}
+
+func (d *RecorderDailyData) CSVHeader() string {
+	return "day,solar_generation"
+}
+
+func (d *RecorderDailyData) CSVLine() string {
+	return fmt.Sprintf("%v,%v", d.Day.Format(time.DateOnly), d.Total())
 }

@@ -121,5 +121,5 @@ func (h *HistoryDailyData) GetChange() (float64, error) {
 }
 
 func (h HistoryDailyData) DataDate() time.Time {
-	return h.minTime.Truncate(time.Hour * 24)
+	return h.maxTime.Truncate(time.Hour * 24)
 }

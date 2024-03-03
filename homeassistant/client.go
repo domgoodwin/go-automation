@@ -13,6 +13,7 @@ func CreateClient() *Client {
 		accessToken: token,
 		url:         "homeassistant.local:8123",
 		httpClient:  &http.Client{},
+		counter:     1,
 	}
 }
 
@@ -22,4 +23,5 @@ type Client struct {
 	wsc         *websocket.Conn
 	wsType      int
 	httpClient  *http.Client
+	counter     int
 }

@@ -17,17 +17,17 @@ var graphCmd = &cobra.Command{
 	Use:   "graph",
 	Short: "Export data as graphs",
 	Run: func(cmd *cobra.Command, args []string) {
-		renderGraph()
+		renderGraph(dataFile, "./out.html")
 	},
 }
 
-func renderGraph() {
-	fig := generateHistoryFigure()
-	offline.ToHtml(fig, "./out.html")
+func renderGraph(inFile string, outFile string) {
+	fig := generateHistoryFigure(inFile)
+	offline.ToHtml(fig, outFile)
 }
 
-func generateHistoryFigure() *grob.Fig {
-	f, err := os.Open(dataFile)
+func generateHistoryFigure(inFile string) *grob.Fig {
+	f, err := os.Open(inFile)
 	if err != nil {
 		panic(err)
 	}
