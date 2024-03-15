@@ -66,6 +66,40 @@ func generateHistoryFigure(inFile string) *grob.Fig {
 				Title: &grob.LayoutXaxisTitle{
 					Text: "Date",
 				},
+				Rangeslider: &grob.LayoutXaxisRangeslider{
+					Autorange: grob.True,
+				},
+				Rangeselector: &grob.LayoutXaxisRangeselector{
+					Buttons: []*RangeStepButton{
+						{
+							Count:    1,
+							Label:    "1m",
+							Step:     "month",
+							Stepmode: "backward",
+						},
+						{
+							Count:    6,
+							Label:    "6m",
+							Step:     "month",
+							Stepmode: "backward",
+						},
+						{
+							Count:    1,
+							Label:    "YTD",
+							Step:     "year",
+							Stepmode: "todate",
+						},
+						{
+							Count:    1,
+							Label:    "1y",
+							Step:     "year",
+							Stepmode: "backward",
+						},
+						{
+							Step: "all",
+						},
+					},
+				},
 			},
 			Yaxis: &grob.LayoutYaxis{
 				Title: &grob.LayoutYaxisTitle{
@@ -76,4 +110,11 @@ func generateHistoryFigure(inFile string) *grob.Fig {
 		},
 	}
 	return fig
+}
+
+type RangeStepButton struct {
+	Count    int    `json:"count,omitempty"`
+	Label    string `json:"label,omitempty"`
+	Step     string `json:"step,omitempty"`
+	Stepmode string `json:"stepmode,omitempty"`
 }
