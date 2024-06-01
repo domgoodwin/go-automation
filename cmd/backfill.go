@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/domgoodwin/go-automation/homeassistant"
+	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )
 
@@ -39,7 +40,7 @@ func backfill(count int) {
 
 	data := getBackfillData(ctx, count)
 	if data == nil {
-		fmt.Println("empty data")
+		log.Info("Starting up")
 		return
 	}
 

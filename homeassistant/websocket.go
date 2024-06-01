@@ -8,6 +8,8 @@ import (
 
 	grob "github.com/MetalBlueberry/go-plotly/graph_objects"
 	"github.com/gorilla/websocket"
+
+	log "github.com/sirupsen/logrus"
 )
 
 func (c *Client) InitWebsocket() {
@@ -30,7 +32,7 @@ func (c *Client) readMessage() (int, []byte, error) {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(string(rsp))
+	log.Debug(string(rsp))
 	return mt, rsp, err
 }
 
@@ -47,7 +49,7 @@ func (c *Client) GetDailyData(day time.Time) *RecorderDailyData {
 	start := day.Truncate(time.Hour * 24)
 	end := start.Add(24 * time.Hour).Add(-1 * time.Second)
 
-	fmt.Printf("get daily data: %d %v %v\n", c.counter, start, end)
+	log.Debug("get daily data: %d %v %v\n", c.counter, start, end)
 	msg := fmt.Sprintf(`{"type":"recorder/statistics_during_period","start_time":"%s","end_time":"%s","statistic_ids":["sensor.pv_energy"],"period":"hour","units":{"energy":"kWh"},"types":["change"],"id":%d}`, start.Format(time.RFC3339), end.Format(time.RFC3339), c.counter)
 	_ = c.sendMessage(msg)
 	_, rsp, _ := c.readMessage()
@@ -109,8 +111,8 @@ func (d *RecorderDailyData) Total() float64 {
 func (d *RecorderDailyData) ToFig() *grob.Fig {
 	now := time.Now()
 	timeValues, sensorValues := d.GetHourlyData()
-	fmt.Println(timeValues)
-	fmt.Println(sensorValues)
+	log.Debug(timeValues)
+	log.Debug(sensorValues)
 
 	for i, timeVal := range timeValues {
 		if timeVal.IsZero() && i != 0 {

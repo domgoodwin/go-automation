@@ -1,11 +1,12 @@
 package cmd
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+
+	log "github.com/sirupsen/logrus"
 )
 
 var cfgFile string
@@ -21,13 +22,13 @@ var rootCmd = &cobra.Command{
 	Use:   "gohome",
 	Short: "Tool to automate tasks in my house",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("hello")
+		log.Info("hello")
 	},
 }
 
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {
-		fmt.Println(err)
+		log.Error(err)
 		os.Exit(1)
 	}
 }

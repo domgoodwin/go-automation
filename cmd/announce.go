@@ -3,7 +3,6 @@ package cmd
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"os"
 	"os/exec"
 	"time"
@@ -11,6 +10,7 @@ import (
 	grob "github.com/MetalBlueberry/go-plotly/graph_objects"
 	"github.com/domgoodwin/go-automation/homeassistant"
 	"github.com/domgoodwin/go-automation/mastodon"
+	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )
 
@@ -36,7 +36,7 @@ func announce() {
 
 	data := generateImage(ctx)
 	if data == nil {
-		fmt.Println("empty data")
+		log.Debug("empty data")
 		return
 	}
 
