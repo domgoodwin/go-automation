@@ -6,6 +6,7 @@ import (
 	"os"
 	"os/signal"
 	"strconv"
+	"strings"
 	"syscall"
 	"time"
 
@@ -38,7 +39,14 @@ func onMessageReceived(client MQTT.Client, message MQTT.Message) {
 		"solar_assistant/total/battery_power/state":
 		dataType = "battery"
 	default:
-		log.Debug("Dropping message on topic: %s\nMessage: %s\n", message.Topic(), message.Payload())
+		if strings.Contains(message.Topic(), "airgradient/readings") {
+			err := processAirGradientMessage(client, message)
+			if err != nil {
+				log.Error("error processing air gradient message %v %v", err, message.Payload())
+			}
+			return
+		}
+		log.Tracef("Dropping message on topic: %s\nMessage: %s\n", message.Topic(), message.Payload())
 		return
 	}
 
@@ -68,6 +76,7 @@ func Subscribe(topic string) error {
 			return
 		}
 	}
+
 
 	client := MQTT.NewClient(connOpts)
 	if token := client.Connect(); token.Wait() && token.Error() != nil {

@@ -1,6 +1,9 @@
 package cmd
 
 import (
+	"os"
+	"os/signal"
+
 	"github.com/domgoodwin/go-automation/mqtt"
 
 	log "github.com/sirupsen/logrus"
@@ -21,7 +24,16 @@ var subscribeCmd = &cobra.Command{
 }
 
 func subscribe(topic string) {
-	for {
+	run := true
+	c := make(chan os.Signal, 1)
+	signal.Notify(c, os.Interrupt)
+	go func() {
+		for _ = range c {
+			log.Info("SIGINT received, stopping...")
+			run = false
+		}
+	}()
+	for run {
 		log.Info("Subscribing...")
 		err := mqtt.Subscribe(topic)
 		if err != nil {
