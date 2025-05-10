@@ -3,4 +3,8 @@ out.html
 out.png
 mast_register.sh
 graph.json
+<<<<<<< HEAD
 .venv/
+=======
+./venv
+>>>>>>> aeea8e4 (Fix script for nix)

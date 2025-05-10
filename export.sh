@@ -2,24 +2,24 @@
 
 set -x
 
-cd /home/dom/repos/homeassistant-automate
+cd /home/dom/repos/domgoodwin/go-automation
 
 source secret.sh
 
-/usr/local/go/bin/go run main.go daily-export 0
+/home/dom/.nix-profile/bin/go run main.go daily-export 0
 
 git add data.csv
 git commit -m "Daily upload $(date)"
 git push origin main
 
-/usr/local/go/bin/go run main.go graph
+/home/dom/.nix-profile/bin/go run main.go graph
 
 cp out.html ../blog/layouts/shortcodes/solar.html
 
-cd /home/dom/repos/blog
+cd /home/dom/repos/domgoodwin/blog
 
 ./deploy.sh
 
-cd /home/dom/repos/homeassistant-automate
+cd /home/dom/repos/domgoodwin/go-automation
 
-/usr/local/go/bin/go run main.go announce
+# /home/dom/.nix-profile/bin/go run main.go announce

@@ -11,7 +11,7 @@ func CreateClient() *Client {
 	token := os.Getenv("HA_TOKEN")
 	return &Client{
 		accessToken: token,
-		url:         "homeassistant.local:8123",
+		url:         "homeassistant.tailce93f.ts.net:8123",
 		httpClient:  &http.Client{},
 		counter:     1,
 	}
