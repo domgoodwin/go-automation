@@ -1,0 +1,36 @@
+{{if and (not .Downloading) (not .RecentDone)}}
+<p class="empty">No active or recent downloads</p>
+{{else}}
+
+{{if .Downloading}}
+<h3 class="section-title">Downloading</h3>
+{{range .Downloading}}
+<div class="torrent-card">
+  <div class="torrent-info">
+    <div class="torrent-name">{{.Name}}</div>
+    <div class="torrent-meta">{{.SizeString}} &middot; ↓ {{.SpeedString}} &middot; ETA {{.ETAString}}{{if .RequestedBy}} &middot; {{.RequestedBy}}{{end}}</div>
+  </div>
+  <div class="torrent-progress">
+    <div class="progress-bar">
+      <div class="progress-fill" style="width: {{.ProgressPct}}%"></div>
+    </div>
+    <span class="progress-pct">{{.ProgressPct}}%</span>
+  </div>
+</div>
+{{end}}
+{{end}}
+
+{{if .RecentDone}}
+<h3 class="section-title" style="margin-top:1.5rem">Completed (last 24h)</h3>
+{{range .RecentDone}}
+<div class="torrent-card done">
+  <div class="torrent-info">
+    <div class="torrent-name">{{.Name}}</div>
+    <div class="torrent-meta">{{.SizeString}}{{if .RequestedBy}} &middot; {{.RequestedBy}}{{end}}</div>
+  </div>
+  <span class="badge already">Done</span>
+</div>
+{{end}}
+{{end}}
+
+{{end}}

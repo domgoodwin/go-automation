@@ -1,0 +1,34 @@
+{{define "settings.html"}}
+<div class="settings-form">
+  <div class="setting-row">
+    <label class="setting-label">Your account</label>
+    <span class="setting-value">{{if .CFEmail}}{{.CFEmail}}{{else}}<em style="color:#666">unknown (no Cloudflare Access header)</em>{{end}}</span>
+  </div>
+  <form hx-post="/settings" hx-target="#settings-result" hx-swap="innerHTML">
+    <div class="setting-row">
+      <label class="setting-label" for="kindle-email">Kindle email</label>
+      <div style="display:flex;gap:0.5rem;align-items:center;flex:1">
+        <input
+          id="kindle-email"
+          name="kindle_email"
+          type="email"
+          placeholder="yourname@kindle.com"
+          value="{{.KindleEmail}}"
+          style="flex:1;padding:0.6rem 0.9rem;border-radius:6px;border:1px solid #333;background:#1c1c1c;color:#e0e0e0;font-size:0.9rem;outline:none"
+        />
+        <button type="submit" style="padding:0.6rem 1.2rem;border-radius:6px;border:none;background:#6fbf6f;color:#fff;font-size:0.85rem;cursor:pointer;white-space:nowrap">Save</button>
+      </div>
+    </div>
+  </form>
+  <div id="settings-result" style="margin-top:0.5rem;min-height:1.5rem"></div>
+  <p class="empty" style="margin-top:1.5rem;line-height:1.7">
+    <strong style="color:#ccc">Finding your Kindle email:</strong> Open the Kindle app or your Kindle device settings, or visit
+    <a href="https://www.amazon.co.uk/hz/mycd/myx#/home/settings/payment" target="_blank" rel="noopener" style="color:#6fbf6f">Manage Your Content &amp; Devices</a>
+    → <em>Preferences</em> → <em>Personal Document Settings</em>. Your address ends in <code style="color:#c8903a">@kindle.com</code>.
+  </p>
+  <p class="empty" style="margin-top:0.75rem;line-height:1.7">
+    <strong style="color:#ccc">Approved senders:</strong> On the same page, add <strong>{{.FromEmail}}</strong> to the
+    <em>Approved Personal Document E-mail List</em> so Amazon will accept books sent from this server.
+  </p>
+</div>
+{{end}}

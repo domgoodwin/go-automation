@@ -1,0 +1,20 @@
+{{$hasAny := false}}
+{{range .}}{{if .Entries}}{{$hasAny = true}}{{end}}{{end}}
+
+{{if not $hasAny}}
+<p class="empty">Nothing scheduled for the next 7 days</p>
+{{else}}
+<div class="cal-list">
+{{range .}}{{if .Entries}}
+<div class="cal-list-day">
+  <div class="cal-label">{{.Label}} <span class="cal-date">{{.Date}}</span></div>
+  {{range .Entries}}
+  <div class="cal-entry cal-{{.Type}}">
+    <span class="cal-title">{{.Title}}</span>
+    {{if .Subtitle}}<span class="cal-sub">{{.Subtitle}}</span>{{end}}
+  </div>
+  {{end}}
+</div>
+{{end}}{{end}}
+</div>
+{{end}}

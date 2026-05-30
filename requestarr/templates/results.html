@@ -1,0 +1,49 @@
+{{if not .}}
+<p class="empty">No results</p>
+{{else}}
+{{range .}}
+<div class="result-card">
+  {{if .PosterURL}}
+  <img src="{{.PosterURL}}" alt="{{.Title}} poster" loading="lazy">
+  {{else}}
+  <div style="width:80px;height:120px;background:#2a2a2a;flex-shrink:0"></div>
+  {{end}}
+  <div class="info">
+    <div class="title">{{.Title}}</div>
+    <div class="year">
+      {{if .Author}}<span style="color:#6fbf6f">{{.Author}}</span>{{if .Year}} · {{end}}{{end}}
+      {{if .Year}}{{.Year}}{{end}}
+    </div>
+    <div class="overview">{{.Overview}}</div>
+  </div>
+  <div class="actions">
+    {{if .Searching}}
+    {{if and (eq .Type "book") .CanQueueKindle}}
+    <button class="request-btn book-btn" onclick="requestItem('{{.ID}}', '{{.Type}}', this)">Request</button>
+    {{else}}
+    <span class="badge searching">{{if eq .Type "book"}}Downloading...{{else}}Searching...{{end}}</span>
+    {{end}}
+    {{else if .Monitored}}
+    <span class="badge monitored">{{if eq .Type "book"}}Queued{{else}}Monitored{{end}}</span>
+    {{else if .InLibrary}}
+    {{if eq .Type "book"}}
+    {{if .Sent}}
+    <span class="badge already">Sent ✓</span>
+    {{else}}
+    <button class="request-btn book-btn" onclick="sendToKindle('{{.ID}}', this)">Send to Kindle</button>
+    {{end}}
+    {{else}}
+    <span class="badge already">In Library</span>
+    {{end}}
+    {{else if .OnDisk}}
+    <span class="badge ondisk">On Disk</span>
+    {{else}}
+    <button class="request-btn {{if eq .Type "anime"}}anime-btn{{end}}{{if eq .Type "book"}}book-btn{{end}}" onclick="requestItem('{{.ID}}', '{{.Type}}', this)">Request</button>
+    {{end}}
+    {{if and (ne .Type "book") (or .InLibrary .OnDisk .Searching .Monitored)}}
+    <a class="plex-link" href="https://app.plex.tv/desktop/#!/search?query={{urlquery .Title}}" target="_blank" rel="noopener">Plex ↗</a>
+    {{end}}
+  </div>
+</div>
+{{end}}
+{{end}}
